@@ -25,22 +25,12 @@ export const BookProvider = ({ children }) => {
     setIdCounter(idCounter + 1)
   }
 
-  const toggleStatus = (id) => {
-    setBooks(
-      books.map((b) =>
-        b.id === id
-          ? { ...b, status: b.status === "Read" ? "Unread" : "Read" }
-          : b
-      )
-    )
-  }
-
   const deleteBook = (id) => {
     setBooks(books.filter((b) => b.id !== id))
   }
 
   return (
-    <BookContext.Provider value={{ books, addBook, toggleStatus, deleteBook }}>
+    <BookContext.Provider value={{ books, addBook, deleteBook }}>
       {children}
     </BookContext.Provider>
   )
