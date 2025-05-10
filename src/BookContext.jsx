@@ -5,32 +5,43 @@ export const useBooks = () => useContext(BookContext)
 
 export const BookProvider = ({ children }) => {
   const [books, setBooks] = useState([])
-  const [idCounter, setIdCounter] = useState(1)
 
   useEffect(() => {
     const stored = localStorage.getItem("books")
     if (stored) {
       const parsed = JSON.parse(stored)
       setBooks(parsed)
-      setIdCounter(parsed.length + 1)
     }
   }, [])
 
   useEffect(() => {
-    localStorage.setItem("books", JSON.stringify(books))
+    if (books.length > 0) {
+      localStorage.setItem("books", JSON.stringify(books))
+    }
   }, [books])
 
   const addBook = (book) => {
-    setBooks([...books, { ...book, id: idCounter }])
-    setIdCounter(idCounter + 1)
+    setBooks((prevBooks) => [...prevBooks, { ...book, id: Date.now() }])
   }
 
   const deleteBook = (id) => {
-    setBooks(books.filter((b) => b.id !== id))
+    setBooks((prevBooks) => prevBooks.filter((b) => b.id !== id))
+  }
+
+  const toggleBookStatus = (id) => {
+    setBooks(
+      books.map((book) =>
+        book.id === id
+          ? { ...book, status: book.status === "Read" ? "Unread" : "Read" }
+          : book
+      )
+    )
   }
 
   return (
-    <BookContext.Provider value={{ books, addBook, deleteBook }}>
+    <BookContext.Provider
+      value={{ books, addBook, deleteBook, toggleBookStatus }}
+    >
       {children}
     </BookContext.Provider>
   )
