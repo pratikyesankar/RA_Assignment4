@@ -4,10 +4,8 @@ import { useBooks } from "./BookContext"
 const BookList = ({ filter }) => {
   const { books, deleteBook } = useBooks()
 
-  const filteredBooks = books.filter((book) => {
-    if (filter === "All") return true
-    return book.status === filter
-  })
+  const filteredBooks =
+    filter === "All" ? books : books.filter((book) => book.status === filter)
 
   if (filteredBooks.length === 0) return <p>No books found.</p>
 
